@@ -13,15 +13,15 @@
 <body>
 <div>
 <h1>Add Pizza </h1>
-    <form  action="edit">
+    <form method="post"  action="/pizzashop/update">
       <table>
           <tr>
-              <td>Name</td>
-              <td> <input type="text" name="name" value=""></td>
+              <td>Name </td>
+              <td> <input type="text" name="name" value="${pizza.name}"></td>
           </tr>
           <tr>
               <td>Price</td>
-              <td><input type="text" name="price" value=""></td>
+              <td><input type="text" name="price" value="${pizza.price}"><input type="hidden" name="id" value="${pizza.id}"></td>
           </tr>
           <tr>
               <td colspan="2"><input type="submit"></td>

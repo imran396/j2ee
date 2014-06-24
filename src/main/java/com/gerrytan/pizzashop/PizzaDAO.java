@@ -7,6 +7,9 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 @Repository
 @SuppressWarnings({"unchecked", "rawtypes"})
@@ -29,9 +32,10 @@ public class PizzaDAO {
 	public List<Pizza> findAllWithToppings() {
 		Session session = sessionFactory.getCurrentSession();
 		List pizzas = session.createQuery("select distinct p from Pizza as p left join fetch p.toppings").list();
-		//logger.debug(pizzas.toString());
+		logger.debug(pizzas.toString());
 		return pizzas;
 	}
+
     @Transactional
     public String insertData(Pizza pizza){
         Session session = sessionFactory.getCurrentSession();
@@ -40,10 +44,23 @@ public class PizzaDAO {
     }
 
     @Transactional
-    public List<Pizza> findById( String id) {
+    public String UpdateData(Pizza pizza){
         Session session = sessionFactory.getCurrentSession();
-
-        List pizzas = session.createQuery("FROM Pizza p WHERE p.id = id").list();
-        return pizzas;
+        session.saveOrUpdate(pizza);
+        return pizza.getName();
     }
+
+    @Transactional
+    public Pizza findById(long id) {
+        return (Pizza) sessionFactory.getCurrentSession().get(Pizza.class,id);
+    }
+
+    @Transactional
+    public void deleteById(long id) {
+        Pizza pizza = (Pizza) sessionFactory.getCurrentSession().load(Pizza.class,id);
+        sessionFactory.getCurrentSession().delete(pizza);
+
+    }
+
+
 }

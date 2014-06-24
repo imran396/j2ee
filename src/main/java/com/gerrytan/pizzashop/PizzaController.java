@@ -1,8 +1,10 @@
 package com.gerrytan.pizzashop;
 
 import java.util.List;
+import java.util.Arrays;
 
 import org.apache.commons.logging.Log;
+import org.hibernate.mapping.Array;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -35,7 +37,7 @@ public class PizzaController {
         return "new";
     }
 
-    @RequestMapping(value = "/insert", method = RequestMethod.POST)
+   @RequestMapping(value = "/insert", method = RequestMethod.POST)
 
     public ModelAndView processSubmit(
             @ModelAttribute("pizza") Pizza pizza,
@@ -50,13 +52,39 @@ public class PizzaController {
 
     @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
 
-    public String edit(@PathVariable String id,Model model) {
+    public ModelAndView edit(@PathVariable long id,Model model) {
 
-       System.out.println(id);
-       List<Pizza> pizza = pizzaDAO.findById(id);
+        System.out.println(id);
+        ModelAndView ob = new ModelAndView("edit");
+        Pizza pizza = pizzaDAO.findById(id);
         model.addAttribute("pizza", pizza);
+        return ob;
 
-       return "edit";
     }
+
+   @RequestMapping(value = "/update", method = RequestMethod.POST)
+
+    public ModelAndView processSubmit5(
+            @ModelAttribute("pizza") Pizza pizza,
+            BindingResult result) {
+        System.out.println("pizza Name:" + pizza.getName());
+        String test = pizzaDAO.UpdateData(pizza);
+        System.out.println(test);
+        //return form success view
+        return new ModelAndView("redirect:");
+
+    }
+
+    @RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
+
+    public ModelAndView delete(@PathVariable long id,Model model) {
+
+         System.out.println(id);
+         pizzaDAO.deleteById(id);
+
+        return new ModelAndView("redirect:/");
+
+    }
+
 
 }
